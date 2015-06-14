@@ -379,7 +379,7 @@ Sys.setlocale(&quot;LC_TIME&quot;, &quot;English&quot;)</code></pre>
 </div>
 <div id="make-a-panel-plot-containing-a-time-series-plot-of-the-5-minute-interval-x-axis-and-the-average-number-of-steps-taken-averaged-across-all-weekday-days-or-weekend-days-y-axis." class="section level3">
 <h3>2. Make a panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis).</h3>
-<p>In the sample plot that was provided in the repository, the <strong>interval</strong> variable is used in the x-axis without being transformed to provide equally distant interval identifiers. Being aware that the provided interval identifiers are not uniformly distant across the x axis, I make use of the variable <em>startingminute</em> that I added to fix this problem.</p>
+<p>In the sample plot that was provided in the repository, the <strong>interval</strong> variable was used in the x-axis without being transformed to provide equally distant interval identifiers. Being aware that the provided interval identifiers are not uniformly distant across the x axis, I make use of the variable <strong>startingminute</strong> that I added to fix this problem.</p>
 <pre class="r"><code>intervalstartcompleted &lt;- group_by(activitycompleted, startingminute, daytype)
 intervalmeanscompleted &lt;- summarize(intervalstartcompleted, meansteps = mean(steps))
 

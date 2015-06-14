@@ -472,7 +472,7 @@ activitycompleted$daytype <- as.factor(ifelse (weekdays(activitycompleted$date)
 
 ### 2. Make a panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
 
-In the sample plot that was provided in the repository, the **interval** variable is used in the x-axis without being transformed to provide equally distant interval identifiers. Being aware that the provided interval identifiers are not uniformly distant across the x axis, I make use of the variable *startingminute* that I added to fix this problem. 
+In the sample plot that was provided in the repository, the **interval** variable was used in the x-axis without being transformed to provide equally distant interval identifiers. Being aware that the provided interval identifiers are not uniformly distant across the x axis, I make use of the variable **startingminute** that I added to fix this problem. 
 
 
 ```r
