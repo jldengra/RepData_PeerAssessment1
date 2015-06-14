@@ -93,7 +93,7 @@ summary(activity$startingminute)
 
 For this part of the assignment, we can ignore the missing values in the dataset.
 
-### 1. Total number of steps taken per day, ignoring missing values (taking complete cases)
+### 1. Total number of steps taken per day, ignoring missing values
 
 
 ```r
@@ -432,7 +432,7 @@ Both values differ from the estimates from the first part of the assignment, by 
 
 ### 4.4. What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-The impact of imputing missing data is that the 8 days with missing data draw a new bar in the histogram with height of 8 comprehending all of them. This bar appears on the left, between 0 and 5000, near from 1000, and we can figure out # the accurate x-value of this new bar by getting the summarized number of steps for any of this 8 day with NA's. Let's see for the first date with missing values, which is the date "2012-10-01".
+The impact of imputing missing data is that the 8 days with missing data draw a new bar in the histogram with height of 8 comprehending all of them. This bar appears on the left, between 0 and 5000, near from 1000, and we can figure out the accurate x-value of this new bar by getting the summarized number of steps for any of this 8 day with NA's. Let's see for the first date with missing values, which is the date "2012-10-01".
 
 
 ```r

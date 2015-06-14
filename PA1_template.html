@@ -120,8 +120,8 @@ summary(activity$startingminute)</code></pre>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level2">
 <h2>What is mean total number of steps taken per day?</h2>
 <p>For this part of the assignment, we can ignore the missing values in the dataset.</p>
-<div id="total-number-of-steps-taken-per-day-ignoring-missing-values-taking-complete-cases" class="section level3">
-<h3>1. Total number of steps taken per day, ignoring missing values (taking complete cases)</h3>
+<div id="total-number-of-steps-taken-per-day-ignoring-missing-values" class="section level3">
+<h3>1. Total number of steps taken per day, ignoring missing values</h3>
 <pre class="r"><code>if (!&quot;dplyr&quot; %in% installed.packages()[ , 1]) { install.packages(&quot;dplyr&quot;) }
 library(dplyr)</code></pre>
 <pre><code>## 
@@ -359,7 +359,7 @@ dailymediancompleted</code></pre>
 </div>
 <div id="what-is-the-impact-of-imputing-missing-data-on-the-estimates-of-the-total-daily-number-of-steps" class="section level3">
 <h3>4.4. What is the impact of imputing missing data on the estimates of the total daily number of steps?</h3>
-<p>The impact of imputing missing data is that the 8 days with missing data draw a new bar in the histogram with height of 8 comprehending all of them. This bar appears on the left, between 0 and 5000, near from 1000, and we can figure out # the accurate x-value of this new bar by getting the summarized number of steps for any of this 8 day with NA’s. Let’s see for the first date with missing values, which is the date “2012-10-01”.</p>
+<p>The impact of imputing missing data is that the 8 days with missing data draw a new bar in the histogram with height of 8 comprehending all of them. This bar appears on the left, between 0 and 5000, near from 1000, and we can figure out the accurate x-value of this new bar by getting the summarized number of steps for any of this 8 day with NA’s. Let’s see for the first date with missing values, which is the date “2012-10-01”.</p>
 <pre class="r"><code>dailystepscompleted[as.character(dailystepscompleted$date) == &quot;2012-10-01&quot;, ]$steps</code></pre>
 <pre><code>## [1] 1141</code></pre>
 <p>Then the position of the additional bar is 1141 (number of steps) in the X axis. This 1141 comes from adding the median steps for each interval, which are the estimates for these days.</p>
