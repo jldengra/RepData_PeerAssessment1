@@ -1,9 +1,4 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 <BR>
 
@@ -15,8 +10,8 @@ Firstly, it is set as working directory the folder where the source file is. The
 * date: The date on which the measurement was taken in YYYY-MM-DD format
 * interval: Identifier for the 5-minute interval in which measurement was taken
 
-```{r Question1_Part1, echo = TRUE}
 
+```r
 # Loading the data
 
 # Let's extract the archive with the data file
@@ -29,8 +24,28 @@ activity <- read.csv("./data/activity.csv")
 
 # Let's see the structure and summary statistics
 str(activity)
-summary(activity)
+```
 
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Factor w/ 61 levels "2012-10-01","2012-10-02",..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+```
+
+```r
+summary(activity)
+```
+
+```
+##      steps                date          interval     
+##  Min.   :  0.00   2012-10-01:  288   Min.   :   0.0  
+##  1st Qu.:  0.00   2012-10-02:  288   1st Qu.: 588.8  
+##  Median :  0.00   2012-10-03:  288   Median :1177.5  
+##  Mean   : 37.38   2012-10-04:  288   Mean   :1177.5  
+##  3rd Qu.: 12.00   2012-10-05:  288   3rd Qu.:1766.2  
+##  Max.   :806.00   2012-10-06:  288   Max.   :2355.0  
+##  NA's   :2304     (Other)   :15840
 ```
 
 There are 2.304 not available values for steps. We cannot exclude them because they can be ignored only for the first part of the assigned, while they will need to be imputed later for another part.
@@ -51,8 +66,8 @@ This is a valid representation, an its order is compatible with the chronologica
 We could consider joining date and interval/starting minute to compose a full date consisting of
 year, month, day, hour and minute, but the questions can be adressed working with date and time separately, so it is not necessary. 
 
-```{r Question1_Part2, echo = TRUE}
 
+```r
 # Processing/transforming the data into a format suitable for the analysis
 
 # The date variable is converted from factor to date
@@ -65,8 +80,11 @@ activity$startingminute <- ((activity$interval %/% 100) * 60) + activity$interva
 
 # As expected, the starting minute for the intervals comprehend from 0 minutes to 1435 = 1440 - 5.
 summary(activity$startingminute)
+```
 
-
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##     0.0   358.8   717.5   717.5  1076.0  1435.0
 ```
 
 <BR>
@@ -77,48 +95,89 @@ For this part of the assignment, we can ignore the missing values in the dataset
 
 ### 1. Total number of steps taken per day, ignoring missing values (taking complete cases)
 
-```{r Question2_Part1, echo = TRUE }
 
+```r
 if (!"dplyr" %in% installed.packages()[ , 1]) { install.packages("dplyr") }
 library(dplyr)
+```
 
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 days <- group_by(activity[complete.cases(activity), ], date)
 dailysteps <- summarize(days, steps = sum(steps))
 dailysteps
+```
 
+```
+## Source: local data frame [53 x 2]
+## 
+##          date steps
+## 1  2012-10-02   126
+## 2  2012-10-03 11352
+## 3  2012-10-04 12116
+## 4  2012-10-05 13294
+## 5  2012-10-06 15420
+## 6  2012-10-07 11015
+## 7  2012-10-09 12811
+## 8  2012-10-10  9900
+## 9  2012-10-11 10304
+## 10 2012-10-12 17382
+## ..        ...   ...
 ```
 
 ### 2. Histogram of the total number of steps taken each day.
 
 
-```{r Question2_Part2, echo = TRUE }
 
+```r
 hist(dailysteps$steps, col = "lightcyan", breaks = 50, 
      main = "Histogram of daily summarized steps", 
      xlim = c(0, max(dailysteps$steps) + 5000), ylim = c(0, 10),
      xlab = "Total number of steps", ylab = "Frequency (days)")
-
 ```
+
+![](PA1_template_files/figure-html/Question2_Part2-1.png) 
 
 
 ### 3. Mean and median of the total number of steps taken per day, ignoring missing values.
 
-```{r Question2_Part3, echo = TRUE}
 
+```r
 dailymean <- mean(dailysteps$steps)
 dailymean
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 dailymedian <- median(dailysteps$steps)
 dailymedian
+```
 
+```
+## [1] 10765
 ```
 
 
 
 Measure      | Value
 ------------ | -------------------------------
-Daily Mean   | `r as.character(dailymean)`
-Daily Median | `r as.character(dailymedian)`
+Daily Mean   | 10766.1886792453
+Daily Median | 10765
 
 
 
@@ -133,8 +192,8 @@ At this point we are still considering to ignore the missing values.
 
 Making use the starting minute of intervals instead of the original interval variable make the interval points to be distributed uniformly, such that each 5-minute interval has the same width. 
 
-```{r Question3.1_Part1, echo = TRUE }
 
+```r
 intervalstart <- group_by(activity[complete.cases(activity), ], startingminute)
 intervalmeans <- summarize(intervalstart, meansteps = mean(steps))
 with (intervalmeans, plot(meansteps ~ startingminute, type = "l",
@@ -142,14 +201,15 @@ with (intervalmeans, plot(meansteps ~ startingminute, type = "l",
                  xlab = "5-minute interval starting minute", 
                  ylab = "Average number of steps", 
                  cex.lab = 1, cex.axis = 1, lwd = 2))
-
 ```
+
+![](PA1_template_files/figure-html/Question3.1_Part1-1.png) 
 
 The same plot attending to the starting hour has the same shape but enhances the readability of x-axis:
 
 
-```{r Question3.1_Part2, echo = TRUE }
 
+```r
 intervalmeans$startinghour <- intervalmeans$startingminute / 60
 with (intervalmeans, plot(meansteps ~ startinghour, type = "l",
                           main = "Daily activity pattern", col = "#92DF4A",
@@ -158,44 +218,56 @@ with (intervalmeans, plot(meansteps ~ startinghour, type = "l",
                           xaxt = "n", lwd = 2,
                           cex.lab = 1, cex.axis = 1))
 axis(1, at = 0:24)
-
 ```
+
+![](PA1_template_files/figure-html/Question3.1_Part2-1.png) 
 
 
 ### 2. Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 Let's see the maximum average number of steps and find the corresponding interval (starting date).
 
-```{r Question_3.2_Part1, echo = TRUE}
 
+```r
 maxmeansteps <- max( intervalmeans$meansteps )
 maxmeansteps
+```
 
+```
+## [1] 206.1698
+```
+
+```r
 # This is the interval starting minute for the maximum number of steps
 intervalmax <- intervalmeans[ which.max( intervalmeans$meansteps ), ]$startingminute
 intervalmax
-
 ```
 
-It's the 5-minute interval starting on the minute `r intervalmax`, so (`r intervalmax`, `r intervalmax + 5`). Translated to hours and minutes, it's `r intervalmax %/% 60` hours 
-and `r intervalmax %% 60` minutes.
+```
+## [1] 515
+```
+
+It's the 5-minute interval starting on the minute 515, so (515, 520). Translated to hours and minutes, it's 8 hours 
+and 35 minutes.
 
 Just to check this is correct, let's see that the corresponding interval value
-in the aggregated complete cases is `r (intervalmax %/% 60) * 100 + intervalmax %% 60` as expected.
+in the aggregated complete cases is 835 as expected.
 
-```{r Question_3.2_Part1b, echo = TRUE}
 
+```r
 # This is the interval identifier variable for the maximum number of steps
 intervalmaxid <- activity[complete.cases(activity), ][ which.max( intervalmeans$meansteps ), ]$interval
 intervalmaxid
+```
 
-
+```
+## [1] 835
 ```
 
 
 **Conclusion: **<BR>
 The 5-minute interval, on average across all the days in the dataset, containing 
-the maximum number of steps is the interval **`r intervalmaxid`**, with starting minute **`r intervalmax`**, corresponding with an average of **`r maxmeansteps`** steps.
+the maximum number of steps is the interval **835**, with starting minute **515**, corresponding with an average of **206.1698113** steps.
 
 
 <BR>
@@ -207,28 +279,56 @@ the maximum number of steps is the interval **`r intervalmaxid`**, with starting
 
 Let's see how many missing values are and how they are distributed by querying the summary statistics.
 
-```{r Question4_Part1, echo = TRUE}
 
+```r
 summary(activity)
+```
 
+```
+##      steps             date               interval      startingminute  
+##  Min.   :  0.00   Min.   :2012-10-01   Min.   :   0.0   Min.   :   0.0  
+##  1st Qu.:  0.00   1st Qu.:2012-10-16   1st Qu.: 588.8   1st Qu.: 358.8  
+##  Median :  0.00   Median :2012-10-31   Median :1177.5   Median : 717.5  
+##  Mean   : 37.38   Mean   :2012-10-31   Mean   :1177.5   Mean   : 717.5  
+##  3rd Qu.: 12.00   3rd Qu.:2012-11-15   3rd Qu.:1766.2   3rd Qu.:1076.2  
+##  Max.   :806.00   Max.   :2012-11-30   Max.   :2355.0   Max.   :1435.0  
+##  NA's   :2304
 ```
 
 Since there are only NA's in the variable **steps**, we can compute the number of missing values as the number of rows having NA in this variable: 
 
-```{r Question4_Part2, echo = TRUE}
 
+```r
 totalNAs <- nrow(activity[is.na(activity$steps), ])
 totalNAs
+```
 
+```
+## [1] 2304
 ```
 Further than to get a number of missing values, let's see which days are the dates corresponding to that missing values and how they are given.
 
-```{r Question4_Part3, echo = TRUE}
 
+```r
 activityNA <- activity[is.na(activity$steps), ]
 unique(activityNA$date)
-table(activityNA$date)
+```
 
+```
+## [1] "2012-10-01" "2012-10-08" "2012-11-01" "2012-11-04" "2012-11-09"
+## [6] "2012-11-10" "2012-11-14" "2012-11-30"
+```
+
+```r
+table(activityNA$date)
+```
+
+```
+## 
+## 2012-10-01 2012-10-08 2012-11-01 2012-11-04 2012-11-09 2012-11-10 
+##        288        288        288        288        288        288 
+## 2012-11-14 2012-11-30 
+##        288        288
 ```
 
 The previous table shows that all those 8 days have no data for 288 5-minutes intervals, so in other words, no data during 5 * 288 = 1440 minutes, that is no data during the whole day. 
@@ -238,7 +338,7 @@ The previous table shows that all those 8 days have no data for 288 5-minutes in
             <td align=center>&nbsp; **Total missing values** &nbsp;</td>
         </tr>
         <tr>
-            <td align=center>**`r totalNAs`**</td>
+            <td align=center>**2304**</td>
         </tr>
 </table>
 
@@ -256,8 +356,8 @@ Firstly, we need to compute the median number of steps for every interval. We ca
 
 The imputation will be performed in a data frame **activitycompleted** coming from joining the data frame **activity** with the summarized medians for each interval.
 
-```{r Question4_Part4, echo = TRUE}
 
+```r
 intervalmedians <- summarize(intervalstart, mediansteps = median(steps))
 
 # Imputation
@@ -270,13 +370,23 @@ activitycompleted <- activitycompleted[ , !(names(activitycompleted) %in% "media
 
 # Let's check there are no missing values in the resulting dataset
 summary(activitycompleted)
+```
 
+```
+##  startingminute       steps          date               interval     
+##  Min.   :   0.0   Min.   :  0   Min.   :2012-10-01   Min.   :   0.0  
+##  1st Qu.: 358.8   1st Qu.:  0   1st Qu.:2012-10-16   1st Qu.: 588.8  
+##  Median : 717.5   Median :  0   Median :2012-10-31   Median :1177.5  
+##  Mean   : 717.5   Mean   : 33   Mean   :2012-10-31   Mean   :1177.5  
+##  3rd Qu.:1076.2   3rd Qu.:  8   3rd Qu.:2012-11-15   3rd Qu.:1766.2  
+##  Max.   :1435.0   Max.   :806   Max.   :2012-11-30   Max.   :2355.0
 ```
 
 
 ### 4.1. Histogram of the total number of steps taken each day.
 
-```{r Question4_Part5, echo = TRUE}
+
+```r
 dayscompleted <- group_by(activitycompleted, date)
 dailystepscompleted <- summarize(dayscompleted, steps = sum(steps))
 
@@ -284,27 +394,37 @@ hist(dailystepscompleted$steps, col = "lightcyan", breaks = 50,
      main = "Histogram of daily summarized steps", 
      xlim = c(0, max(dailystepscompleted$steps) + 5000), ylim = c(0, 10),
      xlab = "Total number of steps", ylab = "Frequency (days)")
-
 ```
+
+![](PA1_template_files/figure-html/Question4_Part5-1.png) 
 
 ### 4.2. Mean and median of the total number of steps taken per day.
 
-```{r Question4_Part6, echo = TRUE}
 
+```r
 dailymeancompleted <- mean(dailystepscompleted$steps)
 dailymeancompleted
+```
 
+```
+## [1] 9503.869
+```
+
+```r
 dailymediancompleted <- median(dailystepscompleted$steps)
 dailymediancompleted
+```
 
+```
+## [1] 10395
 ```
 
 Measure      | Value
 ------------ | -------------------------------
-Daily Mean (ignoring missing values)  | `r as.character(dailymean)`
-Daily Median (ignoring missing values) | `r as.character(dailymedian)`
-Daily Mean (imputing missing values)  | `r as.character(dailymeancompleted)`
-Daily Median (imputing missing values) | `r as.character(dailymediancompleted)`
+Daily Mean (ignoring missing values)  | 10766.1886792453
+Daily Median (ignoring missing values) | 10765
+Daily Mean (imputing missing values)  | 9503.86885245902
+Daily Median (imputing missing values) | 10395
 
 ### 4.3. Do these values differ from the estimates from the first part of the assignment?
 
@@ -314,8 +434,13 @@ Both values differ from the estimates from the first part of the assignment, by 
 
 The impact of imputing missing data is that the 8 days with missing data draw a new bar in the histogram with height of 8 comprehending all of them. This bar appears on the left, between 0 and 5000, near from 1000, and we can figure out # the accurate x-value of this new bar by getting the summarized number of steps for any of this 8 day with NA's. Let's see for the first date with missing values, which is the date "2012-10-01".
 
-```{r Question4_Part7, echo = TRUE}
+
+```r
 dailystepscompleted[as.character(dailystepscompleted$date) == "2012-10-01", ]$steps
+```
+
+```
+## [1] 1141
 ```
 
 Then the position of the additional bar is 1141 (number of steps) in the X axis. This 1141 comes from adding the median steps for each interval, which are the estimates for these days. 
@@ -330,22 +455,27 @@ Then the position of the additional bar is 1141 (number of steps) in the X axis.
 
 This new variable **daytype** will be calculated conditionally depending on the day of the week for the date.
 
-```{r Question5_Part1, echo = TRUE}
 
+```r
 # Since the locale in my system is not English, I need to set it to work with week days in English
 Sys.setlocale("LC_TIME", "English")
+```
 
+```
+## [1] "English_United States.1252"
+```
+
+```r
 activitycompleted$daytype <- as.factor(ifelse (weekdays(activitycompleted$date)
                                  %in% c("Saturday", "Sunday"), "weekend", "weekday"))
-
 ```
 
 ### 2. Make a panel plot containing a time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). 
 
 In the sample plot that was provided in the repository, the **interval** variable is used in the x-axis without being transformed to provide equally distant interval identifiers. Being aware that the provided interval identifiers are not uniformly distant across the x axis, I make use of the variable *startingminute* that I added to fix this problem. 
 
-```{r Question5_Part2, echo = TRUE}
 
+```r
 intervalstartcompleted <- group_by(activitycompleted, startingminute, daytype)
 intervalmeanscompleted <- summarize(intervalstartcompleted, meansteps = mean(steps))
 
@@ -355,8 +485,9 @@ g <- ggplot(intervalmeanscompleted, aes(x = startingminute, meansteps))
 g + geom_line( col = "#5AA2FF" ) + facet_wrap ( ~ daytype) +
     theme_bw() + xlab("Interval starting minute") + ylab("Average number of steps") +
     ggtitle("Comparative analysis of activity pattern on day type")   
-
 ```
+
+![](PA1_template_files/figure-html/Question5_Part2-1.png) 
 
  
  
