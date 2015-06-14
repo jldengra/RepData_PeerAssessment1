@@ -335,10 +335,10 @@ The previous table shows that all those 8 days have no data for 288 5-minutes in
 
 <table border=1 cellpadding=3 cellspacing=3 > 
         <tr>
-            <td align=center>&nbsp; **Total missing values** &nbsp;</td>
+            <td align=center>&nbsp; Total missing values &nbsp;</td>
         </tr>
         <tr>
-            <td align=center>**2304**</td>
+            <td align=center> 2304 </td>
         </tr>
 </table>
 
