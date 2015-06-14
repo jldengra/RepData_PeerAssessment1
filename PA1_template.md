@@ -265,7 +265,7 @@ intervalmaxid
 ```
 
 
-**Conclusion: **<BR>
+**Conclusion:**<BR>
 The 5-minute interval, on average across all the days in the dataset, containing 
 the maximum number of steps is the interval **835**, with starting minute **515**, corresponding with an average of **206.1698113** steps.
 
